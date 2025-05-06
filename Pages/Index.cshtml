@@ -1,0 +1,108 @@
+﻿@page
+@model ClinicAppointment.Pages.IndexModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #ffffff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        a {
+            display: block;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+            a:hover {
+                background-color: #0056b3;
+            }
+
+        .alert {
+            text-align: center;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 5px;
+            color: #856404;
+        }
+
+        .login-link {
+            color: #fff3cd;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+            .login-link:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Clinic Appointment Booking System</h2>
+
+        @if (Model.IsAuthenticated)
+        {
+            <h1>Welcome To HomePage</h1>
+            <ul>
+                <li><a href="/Doctors">Doctors</a></li>
+                <li><a href="/Patients">Patients</a></li>
+                <li><a href="/Appointments">Appointments</a></li>
+                <li><a href="/Logout" style="background-color: #dc3545;">Logout</a></li>
+            </ul>
+        }
+        else
+        {
+            <div class="alert">
+                You are not authenticated. <a class="login-link" href="/Login">Login</a>
+            </div>
+        }
+    </div>
+</body>
+</html>

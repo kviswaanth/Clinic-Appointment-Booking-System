@@ -1,0 +1,58 @@
+﻿@page
+@model ClinicAppointment.Pages.Appointments.ConfirmationModel
+@{
+    ViewData["Title"] = "Book Appointment Successfully";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            padding: 30px;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            color: green;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .btn-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+            .btn-link:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <h1>Book Appointment Successful</h1>
+
+    @if (ViewData["successfullyMessage"] != null)
+    {
+        <div class="success-message">@ViewData["successfullyMessage"]</div>
+    }
+
+    <p><a href="/Index" class="btn-link">Go Back to Homepage</a></p>
+</body>
+</html>

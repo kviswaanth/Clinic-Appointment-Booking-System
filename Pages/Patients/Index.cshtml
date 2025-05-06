@@ -1,0 +1,124 @@
+﻿@page
+@model ClinicAppointment.Pages.Patients.IndexModel
+@{
+    ViewData["Title"] = "Patients";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            padding: 30px;
+            margin: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-control {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .btn:hover {
+                background-color: #0056b3;
+            }
+
+        .patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+            .patient-table th, .patient-table td {
+                padding: 12px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }
+
+            .patient-table thead {
+                background-color: #f2f2f2;
+            }
+
+            .patient-table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            .patient-table tr:hover {
+                background-color: #eef3ff;
+            }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+            .back-link:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <h2>Patients List</h2>
+
+    <form method="get">
+        <div class="form-group">
+            <label for="fileNo">Search by File Number</label>
+            <input type="text" id="fileNo" name="fileNo" class="form-control" placeholder="Enter File Number" value="@Model.FileNo" />
+            <button type="submit" class="btn mt-2">Search</button>
+        </div>
+    </form>
+
+    <table class="patient-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>File Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var patient in Model.Patients)
+            {
+                <tr>
+                    <td>@patient.Name</td>
+                    <td>@patient.PhoneNumber</td>
+                    <td>@patient.FileNo</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a class="back-link" href="/Index">← Go Back</a>
+</body>
+</html>

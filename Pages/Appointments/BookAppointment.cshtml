@@ -1,0 +1,160 @@
+﻿@page
+@model ClinicAppointment.Pages.Appointments.BookAppointmentModel
+@{
+    ViewData["Title"] = "Book Appointment";
+}
+
+@{
+    var dt = Model.Appointment.AppointmentDateTime;
+    var datetimeValue = dt != DateTime.MinValue
+        ? dt.ToString("yyyy-MM-dd HH:mm")
+        : "";
+}
+
+@{
+    var durationValue = Model.Appointment.DurationInMinutes > 0
+        ? Model.Appointment.DurationInMinutes.ToString()
+        : "1";  // Default to 1 minute if it's invalid or 0
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            padding: 30px;
+            margin: 0;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        .error-message {
+            color: red;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+            .back-link:hover {
+                background-color: #e2e6ea;
+            }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Book Appointment</h2>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label>Doctor</label>
+                <select name="Appointment.DoctorId" class="form-control" required>
+                    <option value="">-- Select Doctor --</option>
+                    @foreach (var doc in Model.DoctorList)
+                    {
+                        <option value="@doc.Value">@doc.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Patient</label>
+                <select name="Appointment.PatientId" class="form-control" required>
+                    <option value="">-- Select Patient --</option>
+                    @foreach (var doc1 in Model.PatientList)
+                    {
+                        <option value="@doc1.Value">@doc1.Text</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Appointment.AppointmentDateTime">Appointment Date & Time</label>
+                <input name="Appointment.AppointmentDateTime"
+                       class="form-control"
+                       type="datetime-local"
+                       value="@datetimeValue"
+                       min="@Model.Appointment.AppointmentDateTime.ToString("yyyy-MM-dd HH:mm")"
+                       step="60"
+                       required />
+                <span asp-validation-for="Appointment.AppointmentDateTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Appointment.DurationInMinutes">Duration (minutes)</label>
+                <input name="Appointment.DurationInMinutes"
+                       class="form-control"
+                       type="number"
+                       min="1"
+                       value="@durationValue"
+                       required />
+                <span asp-validation-for="Appointment.DurationInMinutes" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-primary">Book Appointment</button>
+        </form>
+
+        @if (ViewData["ErrorMessage"] != null)
+        {
+            <div class="error-message">@ViewData["ErrorMessage"]</div>
+        }
+
+        <p><a href="/Appointments/Index" class="back-link">Go Back to Appointments</a></p>
+    </div>
+</body>
+</html>

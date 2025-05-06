@@ -1,0 +1,182 @@
+﻿@page
+@model ClinicAppointment.Pages.Appointments.IndexModel
+@{
+    ViewData["Title"] = "All Appointments";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            padding: 30px;
+            margin: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .success-message, .error-message {
+            color: green;
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .appointments-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+
+            .appointments-table th, .appointments-table td {
+                padding: 12px;
+                text-align: left;
+                border: 1px solid #ddd;
+            }
+
+            .appointments-table thead {
+                background-color: #f2f2f2;
+            }
+
+            .appointments-table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            .appointments-table tr:hover {
+                background-color: #eef3ff;
+            }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+            .btn-danger:hover {
+                background-color: #c82333;
+            }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link, .book-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+        }
+
+            .back-link:hover, .book-link:hover {
+                text-decoration: underline;
+            }
+
+        .action-btns {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .btn-link:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px); /* Slight lift effect on hover */
+            }
+
+            .btn-link:active {
+                background-color: #003f8a;
+                transform: translateY(1px); /* Slight push effect on click */
+            }
+
+        .book-link, .back-link {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Appointments List</h2>
+
+    @if (TempData["successfullyMessage"] != null)
+    {
+        <div class="success-message">@TempData["successfullyMessage"]</div>
+    }
+
+    @if (Model.Appointments != null && Model.Appointments.Any())
+    {
+        <table class="appointments-table">
+            <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Patient</th>
+                    <th>Appointment Date</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var appt in Model.Appointments)
+                {
+                    <tr>
+                        <td>@appt.Doctor.Name</td>
+                        <td>@appt.Patient.Name</td>
+                        <td>@appt.AppointmentDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@appt.DurationInMinutes minutes</td>
+                        <td>
+                            <form method="post" class="action-btns">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="AppointmentId" value="@appt.Id" />
+                                <button type="submit" name="action" value="Cancel" class="btn btn-danger btn-sm">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No appointments found.</p>
+    }
+
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="error-message">@ViewData["ErrorMessage"]</div>
+    }
+
+    <p class="book-link">
+        <a href="/Appointments/BookAppointment" class="btn-link">Book Appointment</a>
+    </p>
+    <p class="back-link">
+        <a href="/Index" class="btn-link">Go Back</a>
+    </p>
+
+</body>
+</html>
