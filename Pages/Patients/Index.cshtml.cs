@@ -1,6 +1,7 @@
 using ClinicAppointment.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClinicAppointment.Pages.Patients
 {
@@ -14,7 +15,9 @@ namespace ClinicAppointment.Pages.Patients
             _context = context;
             _httpClientFactory = httpClientFactory;
         }
-
+        [BindProperty]
+        public Patient Patient { get; set; }
+        [BindProperty]
         public List<Patient> Patients { get; set; } = new();
         public string FileNo { get; set; }
         public async Task OnGetAsync(string fileNo)
@@ -38,6 +41,30 @@ namespace ClinicAppointment.Pages.Patients
                 // If no filter is applied, show all patients
                 Patients = _context.Patients.ToList();
             }
+        }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!string.IsNullOrWhiteSpace(Patient.Name) &&
+        !string.IsNullOrWhiteSpace(Patient.PhoneNumber) &&
+        !string.IsNullOrWhiteSpace(Patient.FileNo))
+            {
+                // Check if FileNo already exists
+                var exists = await _context.Patients.AnyAsync(p => p.FileNo == Patient.FileNo);
+                if (exists)
+                {
+                    TempData["ErrorMessage"] = "A patient with this File Number already exists.";
+                    return Page();
+                }
+
+                _context.Patients.Add(Patient);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Patient added successfully!";
+                return RedirectToPage();
+            }
+
+            TempData["ErrorMessage"] = "Please fill in all fields.";
+            return Page();
         }
     }
 }
