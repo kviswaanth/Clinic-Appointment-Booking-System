@@ -65,7 +65,8 @@ namespace ClinicAppointment.Pages.Appointments
 
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToPage("/Appointments/Confirmation");
+                TempData["SuccessMessage"] = "Appointment Book successfully!";
+                return Page();
 
             }
 
