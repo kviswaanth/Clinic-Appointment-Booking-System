@@ -7,24 +7,31 @@ namespace ClinicAppointment.Pages.Patients
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public IndexModel(ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context, IHttpClientFactory httpClientFactory)
         {
             _context = context;
+            _httpClientFactory = httpClientFactory;
         }
 
-        public List<Patient> Patients { get; set; }
+        public List<Patient> Patients { get; set; } = new();
         public string FileNo { get; set; }
-        public void OnGet(string fileNo)
+        public async Task OnGetAsync(string fileNo)
         {
+            Patients = new List<Patient>();
             FileNo = fileNo;
 
-            // Filter the patients by FileNo if it's provided
+            var client = _httpClientFactory.CreateClient();
             if (!string.IsNullOrEmpty(fileNo))
             {
-                Patients = _context.Patients
-                    .Where(p => p.FileNo.Contains(fileNo))
-                    .ToList();
+                var response = await client.GetAsync($"https://localhost:44355/api/Patients/fileNo?fileNo={fileNo}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var patient = await response.Content.ReadFromJsonAsync<Patient>();
+                    if (patient != null)
+                        Patients.Add(patient); // Add single patient to list for Razor display
+                }
             }
             else
             {
