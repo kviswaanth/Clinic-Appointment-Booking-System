@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model ClinicAppointment.Pages.Doctors.IndexModel
 
 @{
@@ -20,64 +20,71 @@
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #28a745;
             margin-bottom: 30px;
         }
 
         .btn {
-            display: inline-block;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
-            text-decoration: none;
             border: none;
             border-radius: 5px;
-            margin-bottom: 20px;
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
             .btn:hover {
-                background-color: #0056b3;
+                background-color: #218838;
             }
 
-        .form-section {
-            background-color: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 450px;
-            margin-bottom: 30px;
-            display: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        .form-group {
+            margin-bottom: 20px;
         }
 
-            .form-section label {
-                font-weight: bold;
-                display: block;
-                margin-bottom: 6px;
-            }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+        }
 
-            .form-section input {
-                width: 100%;
-                padding: 10px;
-                margin-bottom: 15px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                font-size: 15px;
-            }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 450px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px 20px;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            margin: 0 auto 20px auto;
+            max-width: 450px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
 
         .doctor-table {
             width: 100%;
             border-collapse: collapse;
             background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-            .doctor-table th,
-            .doctor-table td {
+            .doctor-table th, .doctor-table td {
                 padding: 12px;
                 text-align: left;
                 border: 1px solid #ddd;
@@ -96,25 +103,45 @@
             }
 
         .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 30px;
             color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
         }
 
             .back-link:hover {
                 text-decoration: underline;
             }
-
-        .center {
-            display: flex;
-            justify-content: center;
-        }
     </style>
 </head>
 <body>
-    <h1>Doctors List</h1>
 
+    <h1> List Of Doctors </h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" id="Name" name="Doctor.Name" required />
+        </div>
+
+        <div class="form-group">
+            <label for="Specialization">Specialization</label>
+            <input type="text" id="Specialization" name="Doctor.Specialization" required />
+        </div>
+
+        <button type="submit" class="btn">Add Doctor</button>
+    </form>
 
     <table class="doctor-table">
         <thead>
