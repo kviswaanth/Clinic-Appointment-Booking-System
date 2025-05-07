@@ -6,6 +6,16 @@ using System.Globalization;
 
 var basePath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, "ClinicAppointment");
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.WithOrigins("AllowAll") // Angular frontend
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var cultureInfo = new CultureInfo("en-US");
@@ -32,6 +42,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSession();
+builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
 
@@ -44,7 +55,7 @@ if (app.Environment.IsDevelopment())
 
 
 
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseStaticFiles();         // Add this if missing
 app.UseRouting();
