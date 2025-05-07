@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model ClinicAppointment.Pages.Appointments.BookAppointmentModel
 @{
     ViewData["Title"] = "Book Appointment";
@@ -75,8 +75,16 @@
                 background-color: #0056b3;
             }
 
-        .error-message {
-            color: red;
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            max-width: 450px;
+            margin: 0 auto 20px auto;
+            text-align: center;
         }
 
         .back-link {
@@ -95,6 +103,12 @@
     </style>
 </head>
 <body>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
     <div class="form-container">
         <h2>Book Appointment</h2>
 
@@ -148,11 +162,6 @@
 
             <button type="submit" class="btn-primary">Book Appointment</button>
         </form>
-
-        @if (ViewData["ErrorMessage"] != null)
-        {
-            <div class="error-message">@ViewData["ErrorMessage"]</div>
-        }
 
         <p><a href="/Appointments/Index" class="back-link">Go Back to Appointments</a></p>
     </div>
