@@ -44,7 +44,7 @@ namespace ClinicAppointment.Pages
                 return RedirectToPage("/Index");
             }
 
-            ViewData["ErrorMessage"] = "Invalid credentials.";
+            TempData["ErrorMessage"] = "Invalid credentials.";
             return Page();
         }
 
