@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model ClinicAppointment.Pages.Patients.IndexModel
 @{
     ViewData["Title"] = "Patients";
@@ -19,18 +19,26 @@
 
         h2 {
             text-align: center;
-            color: #333;
+            color: #007bff;
             margin-bottom: 20px;
+        }
+
+        .form-section {
+            max-width: 450px;
+            margin: 0 auto 40px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .form-group {
             margin-bottom: 20px;
-            text-align: center;
         }
 
         .form-control {
             padding: 8px;
-            width: 300px;
+            width: 100%;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 15px;
@@ -76,6 +84,27 @@
                 background-color: #eef3ff;
             }
 
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            max-width: 450px;
+            margin: 0 auto 20px auto;
+            text-align: center;
+        }
+
+        .small-input {
+            width: 200px;
+            margin: 10px auto;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
         .back-link {
             display: inline-block;
             margin-top: 20px;
@@ -89,16 +118,58 @@
     </style>
 </head>
 <body>
-    <h2>Patients List</h2>
+    <h2>List of Patients</h2>
 
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Add Patient Form -->
+    <div class="form-section">
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="Name">Name</label>
+                <input type="text" id="Name" name="Patient.Name" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="PhoneNumber">Phone Number</label>
+                <input type="text" id="PhoneNumber" name="Patient.PhoneNumber"
+                       class="form-control" required
+                       pattern="^\d{10}$" minlength="10" maxlength="10"
+                       title="Please enter exactly 10 digits (numbers only)"
+                       oninput="this.value = this.value.replace(/\D/g, '')" />
+            </div>
+
+            <div class="form-group">
+                <label for="FileNo">File Number</label>
+                <input type="text" id="FileNo" name="Patient.FileNo" class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn">Add Patient</button>
+        </form>
+    </div>
+
+    <!-- Search Form -->
     <form method="get">
-        <div class="form-group">
+        <div class="form-group" style="text-align: center;">
             <label for="fileNo">Search by File Number</label>
-            <input type="text" id="fileNo" name="fileNo" class="form-control" placeholder="Enter File Number" value="@Model.FileNo" />
+            <input type="text" id="fileNo" name="fileNo" class="form-control small-input" placeholder="Enter File Number" value="@Model.FileNo" />
             <button type="submit" class="btn mt-2">Search</button>
         </div>
     </form>
 
+    <!-- Patients Table -->
     <table class="patient-table">
         <thead>
             <tr>
