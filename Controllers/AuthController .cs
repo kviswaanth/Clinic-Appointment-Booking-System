@@ -18,4 +18,10 @@ namespace ClinicAppointment.Controllers
             return Unauthorized(new { message = "Invalid credentials" });
         }
     }
-}
+     [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear(); // Clear all session data
+        return Ok(new { message = "Logout successful" });
+    }
+  }
