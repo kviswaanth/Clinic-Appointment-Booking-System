@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model ClinicAppointment.Pages.LoginModelPage
 @{
     ViewData["Title"] = "Admin Login";
@@ -68,15 +68,21 @@
                 background-color: #0056b3;
             }
 
-        .error-message {
-            margin-top: 15px;
+        .alert-danger {
+            background-color: #f8d7da;
             color: red;
-            text-align: center;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
         <h2>Admin Login</h2>
         <form method="post">
             @Html.AntiForgeryToken()
@@ -91,11 +97,6 @@
             </div>
             <button type="submit">Login</button>
         </form>
-
-        @if (ViewData["ErrorMessage"] != null)
-        {
-            <div class="error-message">@ViewData["ErrorMessage"]</div>
-        }
     </div>
 </body>
 </html>
