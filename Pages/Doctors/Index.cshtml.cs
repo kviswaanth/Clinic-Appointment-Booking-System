@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Numerics;
 
 namespace ClinicAppointment.Pages.Doctors
 {
@@ -11,12 +13,15 @@ namespace ClinicAppointment.Pages.Doctors
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpClientFactory _clientFactory;
+        
+
         public IndexModel(ApplicationDbContext context, IHttpClientFactory clientFactory)
         {
             _context = context;
             _clientFactory = clientFactory;
         }
-        public Doctor Doctor { get; set; } = new Doctor();
+        [BindProperty]
+        public Doctor Doctor { get; set; } = new();
         public List<Doctor> Doctors { get; set; } = new List<Doctor>();
         public async Task OnGetAsync()
         {
@@ -26,36 +31,23 @@ namespace ClinicAppointment.Pages.Doctors
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                Doctors = JsonSerializer.Deserialize<List<Doctor>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                Doctors = System.Text.Json.JsonSerializer.Deserialize<List<Doctor>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
             Doctors = await _context.Doctors.ToListAsync();
         }
         public async Task<IActionResult> OnPostAsync()
         {
-
-
-            if (!ModelState.IsValid)
-                return Page();
-
-            var doctorToSend = new Doctor
+            if (!string.IsNullOrWhiteSpace(Doctor.Name) && !string.IsNullOrWhiteSpace(Doctor.Specialization))
             {
-                Name = Doctor.Name,
-                Specialization = Doctor.Specialization
-            };
+                _context.Doctors.Add(Doctor);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Doctor data saved successfully";
+                return RedirectToPage("./Index");
 
-            var client = _clientFactory.CreateClient();
-            var content = new StringContent(JsonSerializer.Serialize(doctorToSend), Encoding.UTF8, "application/json");
-
-            var response = await client.PostAsync("https://localhost:44355/api/doctors", content);
-
-            if (response.IsSuccessStatusCode)
-            {
-                TempData["successfullyMessage"] = "Doctor added successfully.";
-                return RedirectToPage();
             }
-
-            ModelState.AddModelError(string.Empty, "Failed to add doctor.");
+            ModelState.AddModelError(string.Empty, "Doctor Name and Specialization are required.");
             return Page();
         }
+
     }
 }
