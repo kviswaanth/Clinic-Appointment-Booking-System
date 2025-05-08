@@ -1,7 +1,8 @@
 @page
-@model ClinicAppointment.Pages.Appointments.IndexModel
+@model ClinicAppointment.Pages.Doctors.IndexModel
+
 @{
-    ViewData["Title"] = "All Appointments";
+    ViewData["Title"] = "Doctors";
 }
 
 <!DOCTYPE html>
@@ -9,64 +10,60 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/Styles/Appointments.css" />
+    <link rel="stylesheet" href="~/Styles/Doctors.css" />
 </head>
 <body>
-    <h2>Appointments List</h2>
 
-    @if (TempData["successfullyMessage"] != null)
+    <h1> List Of Doctors </h1>
+
+    @if (TempData["SuccessMessage"] != null)
     {
-        <div class="success-message">@TempData["successfullyMessage"]</div>
+        <div class="alert-success">
+            @TempData["SuccessMessage"]
+        </div>
     }
 
-    @if (Model.Appointments != null && Model.Appointments.Any())
-    {
-        <table class="appointments-table">
-            <thead>
-                <tr>
-                    <th>Doctor</th>
-                    <th>Patient</th>
-                    <th>Appointment Date</th>
-                    <th>Duration</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var appt in Model.Appointments)
+    <form method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" id="Name" name="Doctor.Name" required />
+        </div>
+
+        <div class="form-group">
+            <label for="Specialization">Specialization</label>
+            <input type="text" id="Specialization" name="Doctor.Specialization" required />
+        </div>
+
+        <button type="submit" class="btn">Add Doctor</button>
+    </form>
+
+    <table class="doctor-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Specialization</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Doctors != null && Model.Doctors.Any())
+            {
+                foreach (var doctor in Model.Doctors)
                 {
                     <tr>
-                        <td>@appt.Doctor.Name</td>
-                        <td>@appt.Patient.Name</td>
-                        <td>@appt.AppointmentDateTime.ToString("yyyy-MM-dd HH:mm")</td>
-                        <td>@appt.DurationInMinutes minutes</td>
-                        <td>
-                            <form method="post" class="action-btns">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="AppointmentId" value="@appt.Id" />
-                                <button type="submit" name="action" value="Cancel" class="btn btn-danger btn-sm">Cancel</button>
-                            </form>
-                        </td>
+                        <td>@doctor.Name</td>
+                        <td>@doctor.Specialization</td>
                     </tr>
                 }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No appointments found.</p>
-    }
+            }
+            else
+            {
+                <tr><td colspan="2">No doctors found.</td></tr>
+            }
+        </tbody>
+    </table>
 
-    @if (ViewData["ErrorMessage"] != null)
-    {
-        <div class="error-message">@ViewData["ErrorMessage"]</div>
-    }
-
-    <p class="book-link">
-        <a href="/Appointments/BookAppointment" class="btn-link">Book Appointment</a>
-    </p>
-    <p class="back-link">
-        <a href="/Index" class="btn-link">Go Back</a>
-    </p>
-
+    <a class="back-link" href="/Index">← Go Back</a>
 </body>
 </html>
